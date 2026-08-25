@@ -74,5 +74,4 @@ public struct LinkCreditIcon: View {
                     .stroke(Color.primary.opacity(0.2), lineWidth: 1)
             }
     }
-    }
 }
