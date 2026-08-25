@@ -214,7 +214,7 @@
 			packageReferences = (
 				6FA2A8FD2D2426F2005CF73D /* XCRemoteSwiftPackageReference "Telegraph" */,
 				6FA2A9002D2426F9005CF73D /* XCRemoteSwiftPackageReference "Zip" */,
-				159F052A2FF8654D00AE1D06 /* XCRemoteSwiftPackageReference "PartyUI" */,
+				159F052A2FF8654D00AE1D06 /* XCLocalSwiftPackageReference "PartyUI" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6FA2A8E92D24268F005CF73D /* Products */;
@@ -557,17 +557,14 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-/* End XCConfigurationList section */
+/* Begin XCLocalSwiftPackageReference section */
+		159F052A2FF8654D00AE1D06 /* XCLocalSwiftPackageReference "PartyUI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PartyUI;
+		};
+/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		159F052A2FF8654D00AE1D06 /* XCRemoteSwiftPackageReference "PartyUI" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/jailbreakdotparty/PartyUI";
-			requirement = {
-				kind = exactVersion;
-				version = 1.1.2;
-			};
-		};
 		6FA2A8FD2D2426F2005CF73D /* XCRemoteSwiftPackageReference "Telegraph" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Building42/Telegraph";
@@ -589,7 +586,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		159F052B2FF8654D00AE1D06 /* PartyUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 159F052A2FF8654D00AE1D06 /* XCRemoteSwiftPackageReference "PartyUI" */;
+			package = 159F052A2FF8654D00AE1D06 /* XCLocalSwiftPackageReference "PartyUI" */;
 			productName = PartyUI;
 		};
 		6FA2A8FE2D2426F2005CF73D /* Telegraph */ = {
