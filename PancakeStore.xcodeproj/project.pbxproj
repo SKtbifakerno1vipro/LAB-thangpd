@@ -564,8 +564,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jailbreakdotparty/PartyUI";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.0;
+				kind = exactVersion;
+				version = 1.1.2;
 			};
 		};
 		6FA2A8FD2D2426F2005CF73D /* XCRemoteSwiftPackageReference "Telegraph" */ = {
