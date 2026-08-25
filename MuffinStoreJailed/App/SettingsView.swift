@@ -196,7 +196,7 @@ struct SettingsView: View {
                 if let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) {
                     pingStatus = "🟢 Hoạt động tốt (\(latency) ms)"
                 } else if let error = error {
-                    pingStatus = "🔴 Lỗi kết nối"
+                    pingStatus = "🔴 Lỗi: \(error.localizedDescription)"
                 } else {
                     let code = (response as? HTTPURLResponse)?.statusCode ?? 0
                     pingStatus = "🟡 Mã HTTP \(code)"
