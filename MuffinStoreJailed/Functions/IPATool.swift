@@ -163,7 +163,25 @@ class StoreClient {
     }
 
     func getAnisetteHeaders() async -> [String: String] {
-        let servers = [
+        var servers: [String] = []
+        
+        let customURL = UserDefaults.standard.string(forKey: "customAnisetteURL")?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let preset = UserDefaults.standard.string(forKey: "selectedAnisettePreset") ?? "auto"
+        
+        if !customURL.isEmpty && preset == "custom" {
+            var formatted = customURL
+            if !formatted.hasPrefix("http://") && !formatted.hasPrefix("https://") {
+                formatted = "https://" + formatted
+            }
+            if !formatted.contains("/v3/provisioningData") {
+                formatted = formatted.hasSuffix("/") ? "\(formatted)v3/provisioningData" : "\(formatted)/v3/provisioningData"
+            }
+            servers.append(formatted)
+        } else if preset != "auto" && !preset.isEmpty {
+            servers.append(preset)
+        }
+        
+        let defaultServers = [
             "https://anisette.apsteam.top/v3/provisioningData",
             "https://ani.sidestore.io/v3/provisioningData",
             "https://anisette.side.store/v3/provisioningData",
@@ -171,6 +189,12 @@ class StoreClient {
             "https://ani.sidestore.io",
             "https://anisette.ir"
         ]
+        
+        for s in defaultServers {
+            if !servers.contains(s) {
+                servers.append(s)
+            }
+        }
         
         for server in servers {
             guard let url = URL(string: server) else { continue }

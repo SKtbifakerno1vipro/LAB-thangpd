@@ -13,6 +13,11 @@ struct SettingsView: View {
     @Environment(\.openURL) private var openURL
     
     @AppStorage("autoCleanApp") var autoCleanApp: Bool = true
+    @AppStorage("selectedAnisettePreset") var selectedAnisettePreset: String = "auto"
+    @AppStorage("customAnisetteURL") var customAnisetteURL: String = ""
+    
+    @State private var pingStatus: String = ""
+    @State private var isTestingPing: Bool = false
 
     var body: some View {
         NavigationStack {
@@ -48,6 +53,53 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    Picker("Máy chủ Anisette", selection: $selectedAnisettePreset) {
+                        Text("Tự động (Auto Fallback)").tag("auto")
+                        Text("APSTeam Server").tag("https://anisette.apsteam.top/v3/provisioningData")
+                        Text("SideStore Official").tag("https://ani.sidestore.io/v3/provisioningData")
+                        Text("Side.Store Server").tag("https://anisette.side.store/v3/provisioningData")
+                        Text("PureSign Server").tag("https://anisette.puresign.net/v3/provisioningData")
+                        Text("Tùy chỉnh (Custom URL)").tag("custom")
+                    }
+                    
+                    if selectedAnisettePreset == "custom" {
+                        TextField("https://your-anisette.example.com", text: $customAnisetteURL)
+                            .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
+                            .keyboardType(.URL)
+                    }
+                    
+                    HStack {
+                        Button {
+                            testAnisetteConnection()
+                        } label: {
+                            if isTestingPing {
+                                HStack {
+                                    ProgressView()
+                                        .scaleEffect(0.8)
+                                    Text("Đang kiểm tra...")
+                                }
+                            } else {
+                                Label("Kiểm tra kết nối", systemImage: "network")
+                            }
+                        }
+                        .disabled(isTestingPing)
+                        
+                        Spacer()
+                        
+                        if !pingStatus.isEmpty {
+                            Text(pingStatus)
+                                .font(.footnote)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                } header: {
+                    HeaderLabel(text: "Cấu hình Anisette V3", icon: "server.rack")
+                } footer: {
+                    Text("Anisette cung cấp dữ liệu xác thực SEP/iCloud độc lập cho máy chủ Apple.")
+                }
+
+                Section {
                     Toggle(isOn: $autoCleanApp) {
                         Text("settings.autoClean.title")
                         Text("settings.autoClean.subtitle")
@@ -55,6 +107,12 @@ struct SettingsView: View {
 
                     Button("action.cleanDocuments") {
                         cleanUp()
+                    }
+                    
+                    Button(role: .destructive) {
+                        HistoryManager.shared.clearAll()
+                    } label: {
+                        Text("Xóa lịch sử hạ cấp")
                     }
                 } header: {
                     HeaderLabel(text: String(localized: "section.data.title"), icon: "loupe")
@@ -104,6 +162,47 @@ struct SettingsView: View {
                 }
             }
         }
+    }
+    
+    private func testAnisetteConnection() {
+        isTestingPing = true
+        pingStatus = "Đang kiểm tra..."
+        
+        var target = selectedAnisettePreset
+        if selectedAnisettePreset == "custom" {
+            target = customAnisetteURL.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !target.hasPrefix("http://") && !target.hasPrefix("https://") {
+                target = "https://" + target
+            }
+        } else if selectedAnisettePreset == "auto" {
+            target = "https://anisette.apsteam.top/v3/provisioningData"
+        }
+        
+        guard let url = URL(string: target) else {
+            pingStatus = "URL không hợp lệ"
+            isTestingPing = false
+            return
+        }
+        
+        let start = Date()
+        var req = URLRequest(url: url)
+        req.timeoutInterval = 5
+        req.setValue("application/json", forHTTPHeaderField: "Accept")
+        
+        URLSession.shared.dataTask(with: req) { _, response, error in
+            let latency = Int(Date().timeIntervalSince(start) * 1000)
+            DispatchQueue.main.async {
+                isTestingPing = false
+                if let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) {
+                    pingStatus = "🟢 Hoạt động tốt (\(latency) ms)"
+                } else if let error = error {
+                    pingStatus = "🔴 Lỗi kết nối"
+                } else {
+                    let code = (response as? HTTPURLResponse)?.statusCode ?? 0
+                    pingStatus = "🟡 Mã HTTP \(code)"
+                }
+            }
+        }.resume()
     }
 }
 

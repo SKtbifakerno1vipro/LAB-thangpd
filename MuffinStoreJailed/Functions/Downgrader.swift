@@ -57,6 +57,8 @@ func downgradeAppToVersion(appId: String, versionId: String, ipaTool: IPATool) {
     data.appBID = appBundleId
     data.appVersion = appVersion
     
+    HistoryManager.shared.addRecord(appId: appId, bundleId: appBundleId, appVersion: appVersion)
+    
     let finalURL = "https://api.palera.in/genPlist?bundleid=\(appBundleId)&name=\(appBundleId)&version=\(appVersion)&fetchurl=http://127.0.0.1:9090/signed.ipa"
     let installURL = "itms-services://?action=download-manifest&url=" + finalURL.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
     

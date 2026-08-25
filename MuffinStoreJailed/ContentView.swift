@@ -85,6 +85,40 @@ struct ContentView: View {
                     } footer: {
                         Text("section.downgrade.footer")
                     }
+                    
+                    if !HistoryManager.shared.records.isEmpty {
+                        Section {
+                            ForEach(HistoryManager.shared.records) { record in
+                                Button {
+                                    storeURL = "https://apps.apple.com/app/id\(record.appId)"
+                                } label: {
+                                    HStack {
+                                        VStack(alignment: .leading, spacing: 3) {
+                                            Text(record.bundleId.isEmpty ? "App ID: \(record.appId)" : record.bundleId)
+                                                .fontWeight(.medium)
+                                                .foregroundColor(.primary)
+                                            Text("Phiên bản: \(record.appVersion)")
+                                                .font(.footnote)
+                                                .foregroundColor(.secondary)
+                                        }
+                                        Spacer()
+                                        Image(systemName: "arrow.uturn.backward.circle")
+                                            .foregroundColor(.accentColor)
+                                    }
+                                }
+                            }
+                            .onDelete { indexSet in
+                                for i in indexSet {
+                                    let item = HistoryManager.shared.records[i]
+                                    HistoryManager.shared.removeRecord(id: item.id)
+                                }
+                            }
+                        } header: {
+                            HeaderLabel(text: "Lịch sử hạ cấp gần đây", icon: "clock.arrow.circlepath")
+                        } footer: {
+                            Text("Chạm vào để nạp nhanh link App Store.")
+                        }
+                    }
                 }
 
                 // while downgrading
