@@ -15,21 +15,12 @@ public struct AppIcon: View {
     }
     
     public var body: some View {
-        if #available(iOS 19.0, *) {
-            image
-                .resizable()
-                .frame(width: 55, height: 55)
-                .background(PlaceholderAppIcon())
-                .glassEffect(.regular, in: .rect(cornerRadius: 14))
-                .clipShape(.rect(cornerRadius: 14))
-        } else {
-            image
-                .resizable()
-                .frame(width: 55, height: 55)
-                .background(PlaceholderAppIcon())
-                .overlay(AppIconBorder())
-                .clipShape(.rect(cornerRadius: 10))
-        }
+        image
+            .resizable()
+            .frame(width: 55, height: 55)
+            .background(PlaceholderAppIcon())
+            .overlay(AppIconBorder())
+            .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
 
