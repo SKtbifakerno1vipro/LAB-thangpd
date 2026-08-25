@@ -1,6 +1,5 @@
 .DS_Store
 *.ipa
-packages/
 /Resources/Frameworks
 /Resources/*.dylib
 /lib/*.a

@@ -164,30 +164,37 @@ class StoreClient {
 
     func getAnisetteHeaders() async -> [String: String] {
         let servers = [
+            "https://anisette.apsteam.top/v3/provisioningData",
+            "https://ani.sidestore.io/v3/provisioningData",
+            "https://anisette.side.store/v3/provisioningData",
+            "https://anisette.puresign.net/v3/provisioningData",
             "https://ani.sidestore.io",
-            "https://anisette.ir",
-            "https://anisette.puresign.net"
+            "https://anisette.ir"
         ]
         
         for server in servers {
             guard let url = URL(string: server) else { continue }
             var request = URLRequest(url: url)
-            request.timeoutInterval = 5
+            request.timeoutInterval = 7
+            request.setValue("application/json", forHTTPHeaderField: "Accept")
             do {
                 let (data, response) = try await URLSession.shared.data(for: request)
-                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200,
+                if let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode),
                    let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                     var headers: [String: String] = [:]
                     for (k, v) in json {
                         headers[k] = "\(v)"
                     }
-                    print("Successfully fetched Anisette headers from \(server)")
-                    return headers
+                    if headers["X-Apple-I-MD"] != nil || headers["X-Mme-Device-Id"] != nil {
+                        print("Successfully fetched Anisette headers from \(server)")
+                        return headers
+                    }
                 }
             } catch {
                 print("Failed to fetch Anisette from \(server): \(error.localizedDescription)")
             }
         }
+        print("Warning: All Anisette servers failed, proceeding without Anisette headers")
         return [:]
     }
 
