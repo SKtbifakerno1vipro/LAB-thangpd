@@ -15,7 +15,7 @@ public struct SectionPlatter: ViewModifier {
         content
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
-            .background(Color(.secondarySystemBackground), in: .rect(cornerRadius: cornerRad.platter))
+            .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: cornerRad.platter))
     }
 }
 

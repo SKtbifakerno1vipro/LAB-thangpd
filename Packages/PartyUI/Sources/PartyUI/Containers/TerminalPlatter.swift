@@ -18,6 +18,6 @@ public struct TerminalPlatter: ViewModifier {
         content
             .frame(height: 250)
             .padding(.horizontal)
-            .background(Color(.quaternarySystemFill), in: .rect(cornerRadius: terminalRad))
+            .background(Color(.quaternarySystemFill), in: RoundedRectangle(cornerRadius: terminalRad))
     }
 }

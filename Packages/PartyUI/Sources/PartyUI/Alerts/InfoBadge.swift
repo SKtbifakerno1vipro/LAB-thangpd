@@ -28,6 +28,6 @@ public struct InfoBadge: View {
         .font(.callout)
         .foregroundStyle(textColor)
         .padding(8)
-        .background(color, in: .capsule)
+        .background(color, in: Capsule())
     }
 }

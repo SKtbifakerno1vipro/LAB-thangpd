@@ -21,6 +21,6 @@ public struct GetButtonStyle: ButtonStyle {
             .font(.body.weight(.medium))
             .padding(8)
             .foregroundStyle(color)
-            .background(isEnabled ? color.opacity(0.2) : Color(.systemGray).opacity(0.2), in: .capsule)
+            .background(isEnabled ? color.opacity(0.2) : Color(.systemGray).opacity(0.2), in: Capsule())
     }
 }
